@@ -18,7 +18,7 @@ import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+PROJECT_ROOT2 = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -93,16 +93,17 @@ AUTHENTICATION_BACKENDS=(
 )
 
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'django_thought',
-#        'USER': 'postgres',
-#        'PASSWORD': 'Puneeth@1',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd2sl1o3al467jq',
+        'USER': 'extcjzsptpvrzy',
+        'PASSWORD': 'fbcd02c873082553bd45960e7fe22d0907880915faefd3ae14f09d2ad77ee7d8',
+        'HOST': 'ec2-174-129-236-21.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
+
 
 db_from_env=dj_database_url.config()
 DATABASES['default'].update(db_from_env)
