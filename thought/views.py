@@ -12,10 +12,11 @@ from django.views.generic.edit import FormView
 # Create your views here.
 
 import tweepy
-consumer_key = 'VR95CmIMrv7q7vfDoPcjC8NZS'
-consumer_secret = 'YlWo6BzDnhXozSZnvnN1cIcjvRKrJFJVnYA9vvqMDocOdjyBNu'
-access_key = '1006840281361047553-JQPFugH9xVNifKRY1b4BjgpdTLiVND'
-access_secret =   '5R3DXQmf6Xf3FwZHZzqSU3P3oYQAReUqwux9ttj5Gj7K5'
+#Removed the Detailes forcefully to hide the sensitive info.
+consumer_key = 'XXXXXXXXXXXXXXX'
+consumer_secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+access_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+access_secret =   'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
 last_id=-1
 flag=0
