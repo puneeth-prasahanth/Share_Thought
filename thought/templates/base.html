@@ -1,0 +1,191 @@
+{% extends 'bootstrap3/bootstrap3.html'%}
+
+{% load staticfiles %}
+
+{% load bootstrap3 %}
+
+{% load bootstrap_themes %}
+
+
+
+{% bootstrap_styles theme='simplex' type='min.css' %}
+
+{% block bootstrap3_extra_head %}
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="{% static 'base/css/style.css' %}" rel="stylesheet" type="text/css">
+
+<!-- <link href="{% static 'base/css/style.css' %}" rel="stylesheet" type="text/css"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+ 
+        <script src="{% static 'base/js/jquery.cookie.js' %}"></script>
+
+
+{% endblock %}
+
+{% block bootstrap3_title %}
+    {% block title%}
+        Welcome To Share Thought!
+    {% endblock %}
+{% endblock %}
+
+{% block bootstrap3_content %}
+    <body data-gr-c-s-loaded="true" >
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="position:sticky;">
+    <div class="w3-container top">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'index' %}">Share Thought</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="hvr-curl-top-right"><a href="{% url 'index' %}">Home</a></li>
+                <li class="hvr-curl-top-right"><a href="#about">About</a></li>
+                <li class="hvr-curl-top-right"><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="navbar-form pull-right">
+                {% if request.user.is_authenticated%}
+                    Welcome,{% if request.user.first_name %}
+                    {{ request.user.first_name }}
+                {% else %}
+                    {{ request.user.username }}
+                {% endif %}!<a href="{% url 'auth_logout' %}">Log Out</a>
+                {% else %}
+                        Welcome, <a href="{% url 'auth_login' %}">Log In</a> or <a href="{% url 'registration_register' %}">Register?</a>
+                {% endif %}
+
+
+            </div>
+        </div>
+      </div>
+    </nav>
+<div class="container-fluid">
+    <!--<img src="{% static 'base/img/topphoto.jpg' %}"/>-->
+    <img src="{% static 'base/img/topphoto.jpg' %}" class="bg"/>
+    <div class="parallax">
+    <div class="row">
+    {% block body %}
+        <div class="col-md-8 col-md-offset-2 col-sm-12 maincontent">
+            <div style="text-align:center;font-family:italic;"><h1> Welcome To SThought! Place where you can share your Ideas</h1></div>
+            <div style="text-align:center;font-family:italic;"
+                 class="col-md-8 col-md-offset-2 col-sm-12"><p style="font-size:100%;font-family:verdana">Select the Topic of Your choice
+            </p>
+                <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn" style="">Topic</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        {% if topics %}
+                        {% for topic in topics %}
+                        <a href="{% url 'thought' topic.id %}">{{ topic }}</a>
+                        {% endfor %}
+                        {%else%}
+                        <a href="{% url 'index' %}"> <-- Back</a>
+                        {%endif%}
+                    </div>
+                </div>
+            <script>
+                /* When the user clicks on the button,
+                toggle between hiding and showing the dropdown content */
+                function myFunction() {
+                  document.getElementById("myDropdown").classList.toggle("show");
+                }
+                // Close the dropdown if the user clicks outside of it
+                window.onclick = function(event) {
+                  if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                      var openDropdown = dropdowns[i];
+                      if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                      }
+                    }
+                  }
+                }
+                </script>
+            </div>
+
+        {% if twitterData %}
+            <div class="detail_book_review_display">
+                <div class="col-md-8 col-md-offset-2" style="text-align:center">
+                {% for k,tweet in twitterData.items %}
+                <p>{{tweet.created_at}}</p>
+                <p>{{tweet.text}}</p>
+                    {% if request.user.is_authenticated %}
+                    {% if tweet.comment %}
+                    Your Comment:<p style="font-family:italic;color:blue;">{{tweet.comment}}</p>
+                    <div style="text-align:center" >
+                    <form class="form-inline"  action="{% url 'comment' tweet.id topic_id %}" method = "POST">
+                        {% csrf_token %}
+                    <input type="button" name="answer" value="edit" onclick="onButtonClick()" />
+                        <input class="hide" type="text" id="textInput" value='{{tweet.comment}}' >
+                        <textarea class="hide" cols="15" id="textInput2" name="text" rows="2" data-gramm="true" data-txt_gramm_id="028cbd72-8682-be80-f29c-a3716280e6a2" data-gramm_id="028cbd72-8682-be80-f29c-a3716280e6a2" spellcheck="true" data-gramm_editor="true"
+                                  style="z-index: auto; position: relative; line-height: 20px;
+                                  font-size: 14px; transition:
+                                  none 0s ease 0s; background: transparent !important;">{{tweet.comment}}</textarea>
+                        <input type="submit" value="Submit"/>
+                    </form>
+                    </div>
+                    <script>
+                       function onButtonClick(){
+                         document.getElementById('textInput2').className="show";
+                            }
+                    </script>
+                    {%else%}
+                    {% if topic_id %}
+                    <form class="form-inline"  action="{% url 'comment' tweet.id topic_id %}" method = "POST">
+                    {% else %}
+                        <form class="form-inline"  action="{% url 'comment' tweet.id %}" method = "POST">
+                    {%endif%}
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <textarea cols="15" id="id_text" name="text" rows="2" data-gramm="true" data-txt_gramm_id="028cbd72-8682-be80-f29c-a3716280e6a2" data-gramm_id="028cbd72-8682-be80-f29c-a3716280e6a2" spellcheck="true" data-gramm_editor="true"
+                                  style="z-index: auto; position: relative; line-height: 20px;
+                                  font-size: 14px; transition:
+                                  none 0s ease 0s; background: transparent !important;">comments....</textarea>
+                        <input type="submit" value="Submit">
+                    </form>
+                        {% if new_comment.text %}
+                            {% if new_comment.tweet_id == tweet.id %}
+                                {% if new_comment.user == request.user %}
+                                {{new_comment.new_comment}}<br>{{new_comment.Publish_date}}
+                                {%endif%}
+                            {%endif%}
+                        {%endif%}
+
+                    <!--<form action="." method="post">
+                            <div>
+                                <input type="hidden" name = "user" value="{{ request.user }}">
+                            <textarea name="comments" id="comments" style="font-family:sans-serif;font-size:1.2em;">
+                            Enter you Idea here...!
+                            </textarea>
+                            </div>
+                    <input type="submit" value="Submit">
+                    </form>-->
+                    {%endif%}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            </div>
+        {% endif %}
+        </div>
+    {%  endblock %}
+     </div>
+    </div>
+</div>
+</body>
+
+
+<!--<div class="row text-centure navbar footer">
+    <div class="col-md-12">
+        <p>2015 Mystery Books</p>
+    </div>
+</div>-->
+
+{% endblock %}
